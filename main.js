@@ -4,10 +4,17 @@ new Vue({
     el:'#appMoviles',
     data:{
         moviles:[],
+        temas:[],
+        preguntas:[],
+        respuestas:[],
         marca:'',
         modelo:'',
         stock:'',
-        total:0
+        total:0,
+        iniciar:false,
+        temasId:0,
+        seleccionarTema:1,
+        numero:0
     },
     methods:{
         btnAlta: async function(){
@@ -95,14 +102,48 @@ new Vue({
                 }
             })
         },
+        onChange:function(){
+            this.listarPreguntas(this.seleccionarTema);
+        },
+        iniciarQuiz:function(){
+            let id_pregunta = this.preguntas[this.numero].pre_id;
+            axios.post(url,{opcion:'getRespuestas',id:id_pregunta}).then(response=>{
+                console.log(response.data);
+                this.respuestas = response.data;
+            })
+
+            this.iniciar = true;
+        },
+        siguiente:function(){
+            this.numero += 1;
+            
+            let id_pregunta = this.preguntas[this.numero].pre_id;
+            axios.post(url,{opcion:'getRespuestas',id:id_pregunta}).then(response=>{
+                console.log(response.data);
+                this.respuestas = response.data;
+            })
+        },
 
         //PROCEDIMIENTOS LISTAR
         listarMoviles:function(){
             axios.post(url,{opcion:4}).then( response=>{
-                console.log(response);
                 this.moviles = response.data;
             })
         },
+        //LISTAR TEMAS
+        listarTemas:function(){
+            axios.post(url,{opcion:'getTemas'}).then( response=>{
+                this.temas = response.data;
+            })
+        },
+        //LISTADO DE PREGUNTAS
+        listarPreguntas:function(id){
+            axios.post(url,{opcion:'getPreguntas',id:id}).then( response=>{
+                this.preguntas = response.data;
+            });
+        },
+        
+
         //PROCEDIMIENTO CREAR
         altaMovil:function(){
             axios.post(url,{opcion:1,marca:this.marca,modelo:this.modelo,stock:this.stock}).then( response=>{
@@ -127,6 +168,8 @@ new Vue({
     },
     created:function(){
         this.listarMoviles();
+        this.listarTemas();
+        this.listarPreguntas(this.seleccionarTema);
     },
     computed:{
         totalStock(){

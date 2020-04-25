@@ -36,12 +36,27 @@
             $resultado->execute();
             break;
 
-        case 4:
-            $consulta = "SELECT id,marca,modelo,stock FROM moviles ";
+        case 'getTemas':
+            $consulta = "SELECT tema_id,tema_nombre,tema_activo FROM tema ";
             $resultado = $conexion->prepare($consulta);
             $resultado->execute();
             $data = $resultado->fetchAll(PDO::FETCH_ASSOC);
             break;
+        
+        case 'getPreguntas':
+            $consulta = "SELECT * FROM preguntas WHERE tema_id = $id ";
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute();
+            $data = $resultado->fetchAll(PDO::FETCH_ASSOC);
+            break;
+
+        case 'getRespuestas':
+            $consulta = "SELECT * FROM respuesta WHERE pre_id = $id ";
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute();
+            $data = $resultado->fetchAll(PDO::FETCH_ASSOC);
+            break;
+
 
     }
 

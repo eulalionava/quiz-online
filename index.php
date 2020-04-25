@@ -10,19 +10,61 @@
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
-<h4 class="text-center text-dark text-success">Crud con vue y php</h4>
+<h3 class="text-center text-dark text-success">Quiz Online Tecnologico</h3>
 <div id="appMoviles">
     <div class="container">
-        <div class="row">
+        <div class="row mb-5">
             <div class="col">
-                <button @click="btnAlta" class="btn btn-success"><i class="fas fa-plus-circle fa-2xs"></i></button>
+                <select name="" id="" class="form-control" v-model="seleccionarTema" @change="onChange()">
+                    <option v-bind:value="tema.tema_id" v-for="tema of temas">{{tema.tema_nombre}}</option>
+                </select>
             </div>
             <div class="col text-right">
                 <h5>Stock Total: <span class="badge badge-success">{{totalStock}}</span></h5>
             </div>
         </div>
 
-        <div class="row mt-5">
+        <div class="card" v-if="!iniciar">
+            <div class="card-header text-center text-muted">
+                <div class="jumbotron">
+                    <input type="button" value="Iniciar Quiz Online" class="btn btn-success btn-lg" @click="iniciarQuiz">
+                </div>
+            </div>
+        </div>
+
+        <div class="row" v-if="iniciar">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">¿ {{preguntas[numero].pre_pregunta}} ?</h4>
+                    </div>
+                    <div class="card-body" v-if="respuestas">
+                        <div class="custom-control custom-radio mb-2">
+                            <input type="radio" name="pregunta" class="custom-control-input" id="pregunta1">
+                            <label for="pregunta1" class="custom-control-label">{{respuestas[0].res_respuesta}}</label>
+                        </div>
+                        <div class="custom-control custom-radio mb-2">
+                            <input type="radio" name="pregunta" class="custom-control-input" id="pregunta2">
+                            <label for="pregunta2" class="custom-control-label">{{respuestas[1].res_respuesta}}</label>
+                        </div>
+                        <div class="custom-control custom-radio mb-2">
+                            <input type="radio" name="pregunta" class="custom-control-input" id="pregunta3">
+                            <label for="pregunta3" class="custom-control-label">{{respuestas[2].res_respuesta}}</label>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between text-item-center">
+                        <div class="col-md-3">
+                            <input type="button" name="" value="Calificar" class="btn btn-success form-control">                                
+                        </div>
+                        <div class="col-md-3">
+                            <input type="button" name="" value="Siguiente" class="btn btn-primary form-control" @click="siguiente">                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="row mt-5">
             <div class="col-md-12">
                 <table class="table table-striped">
                     <thead>
@@ -58,7 +100,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>
 

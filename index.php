@@ -20,7 +20,7 @@
                 </select>
             </div>
             <div class="col text-right">
-                <h5>Stock Total: <span class="badge badge-success">{{totalStock}}</span></h5>
+                <h5>Stock Total: <span class="badge badge-success">{{total}}</span></h5>
             </div>
         </div>
 
@@ -28,6 +28,47 @@
             <div class="card-header text-center text-muted">
                 <div class="jumbotron">
                     <input type="button" value="Iniciar Quiz Online" class="btn btn-success btn-lg" @click="iniciarQuiz">
+                </div>
+            </div>
+        </div>
+
+        <div class="card" v-if="reiniciar">
+            <div class="card-header text-center text-muted">
+                <div class="jumbotron">
+                    <h4>Quiz Online de Angular finalizado</h4>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h1>{{contCorrectas}}</h1>
+                                </div>
+                                <div class="card-footer bg-success">
+                                    <h5 class="text-white">Correctas</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h1>{{contIncorrectas}}</h1>
+                                </div>
+                                <div class="card-footer bg-danger">
+                                    <h5 class="text-white">Incorrectas</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h1>{{puntos}}</h1>
+                                </div>
+                                <div class="card-footer bg-success">
+                                    <h5 class="text-white">Puntos</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="button" value="Reiniciar" class="btn btn-success btn-lg mt-5" @click="reiniciar">
                 </div>
             </div>
         </div>
@@ -40,24 +81,30 @@
                     </div>
                     <div class="card-body" v-if="respuestas">
                         <div class="custom-control custom-radio mb-2">
-                            <input type="radio" name="pregunta" class="custom-control-input" id="pregunta1">
+                            <input type="radio" name="pregunta" v-model="respuesta" v-bind:value="respuestas[0].res_correcta" class="custom-control-input" id="pregunta1">
                             <label for="pregunta1" class="custom-control-label">{{respuestas[0].res_respuesta}}</label>
                         </div>
                         <div class="custom-control custom-radio mb-2">
-                            <input type="radio" name="pregunta" class="custom-control-input" id="pregunta2">
+                            <input type="radio" name="pregunta" v-model="respuesta" v-bind:value="respuestas[1].res_correcta" class="custom-control-input" id="pregunta2">
                             <label for="pregunta2" class="custom-control-label">{{respuestas[1].res_respuesta}}</label>
                         </div>
                         <div class="custom-control custom-radio mb-2">
-                            <input type="radio" name="pregunta" class="custom-control-input" id="pregunta3">
+                            <input type="radio" name="pregunta" v-model="respuesta" v-bind:value="respuestas[2].res_correcta" class="custom-control-input" id="pregunta3">
                             <label for="pregunta3" class="custom-control-label">{{respuestas[2].res_respuesta}}</label>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between text-item-center">
                         <div class="col-md-3">
-                            <input type="button" name="" value="Calificar" class="btn btn-success form-control">                                
+                            <input type="button" name="" value="Calificar" class="btn btn-success form-control" @click="calificar">                                
+                        </div>
+                        <div class="col-md-auto correcto" v-if="correcto">
+                            <img src="img/correcto.png" width="30" height="30">                               
+                        </div>
+                        <div class="col-md-auto incorrecto" v-if="incorrecto">
+                            <img src="img/incorrecto.png" width="30" height="30">                                
                         </div>
                         <div class="col-md-3">
-                            <input type="button" name="" value="Siguiente" class="btn btn-primary form-control" @click="siguiente">                                
+                            <input type="button" name="" value="Siguiente" class="btn btn-primary form-control" @click="siguiente">                                 
                         </div>
                     </div>
                 </div>

@@ -7,14 +7,19 @@ new Vue({
         temas:[],
         preguntas:[],
         respuestas:[],
-        marca:'',
-        modelo:'',
-        stock:'',
         total:0,
+        contador:1,
         iniciar:false,
         temasId:0,
         seleccionarTema:1,
-        numero:0
+        numero:0,
+        respuesta:'',
+        reiniciar:false,
+        califico:false,
+        correcto:false,
+        incorrecto:false,
+        contCorrectas:0,
+        contIncorrectas:0
     },
     methods:{
         btnAlta: async function(){
@@ -115,13 +120,41 @@ new Vue({
             this.iniciar = true;
         },
         siguiente:function(){
-            this.numero += 1;
-            
-            let id_pregunta = this.preguntas[this.numero].pre_id;
-            axios.post(url,{opcion:'getRespuestas',id:id_pregunta}).then(response=>{
-                console.log(response.data);
-                this.respuestas = response.data;
-            })
+            //VERIFICA SE SE CALIFICO LA PREGUNTA
+            if( this.califico){
+                this.respuesta = '';
+                //VERIFICA EL NUMERO DE PREGUNTAS
+                if( this.contador == this.preguntas.lenght){
+                    this.reiniciar = true;
+                }else{
+                    this.numero += 1;
+                    let id_pregunta = this.preguntas[this.numero].pre_id;
+                    //REALIZA LA PETICION
+                    axios.post(url,{opcion:'getRespuestas',id:id_pregunta}).then(response=>{
+                        console.log(response.data);
+                        this.respuestas = response.data;
+                    })
+    
+                    this.califico = false;
+                    this.correcto = false;
+                    this.incorrecto = false;
+                }
+            }else{
+                alert("Es necesario calificar antes tu respuesta");
+            }
+        },
+        calificar:function(){
+            if(this.respuesta == "S"){
+              this.total += parseInt(this.preguntas[this.numero].pre_valor);
+              this.califico = true;
+              this.correcto = true;
+              this.contCorrectas += 1;
+            }else{
+                this.califico = true;
+                this.incorrecto = true;
+                this.contIncorrectas += 1;
+                console.log("Respuesta incorrecta");
+            }
         },
 
         //PROCEDIMIENTOS LISTAR

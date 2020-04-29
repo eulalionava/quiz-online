@@ -9,15 +9,17 @@ new Vue({
         respuestas:[],
         total:0,
         contador:1,
-        iniciar:false,
+        iniciar:true,
+        empezar:false,
         temasId:0,
         seleccionarTema:1,
         numero:0,
         respuesta:'',
-        reiniciar:false,
+        finalizado:false,
         califico:false,
         correcto:false,
         incorrecto:false,
+        cargando:false,
         contCorrectas:0,
         contIncorrectas:0
     },
@@ -111,36 +113,57 @@ new Vue({
             this.listarPreguntas(this.seleccionarTema);
         },
         iniciarQuiz:function(){
-            let id_pregunta = this.preguntas[this.numero].pre_id;
-            axios.post(url,{opcion:'getRespuestas',id:id_pregunta}).then(response=>{
-                console.log(response.data);
-                this.respuestas = response.data;
-            })
+            if(this.preguntas.length > 0){
+                
+                let id_pregunta = this.preguntas[this.numero].pre_id;
+                axios.post(url,{opcion:'getRespuestas',id:id_pregunta}).then(response=>{
+                    console.log(response.data);
+                    this.respuestas = response.data;
+                })
+    
+                this.iniciar = false;
+                this.empezar = true;
 
-            this.iniciar = true;
+            }else{
+                Swal.fire(
+                    'Hey!!',
+                    'No hay preguntas para el quiz seleccionado',
+                    'error'
+                )
+            }
+
         },
         siguiente:function(){
             //VERIFICA SE SE CALIFICO LA PREGUNTA
             if( this.califico){
                 this.respuesta = '';
                 //VERIFICA EL NUMERO DE PREGUNTAS
-                if( this.contador == this.preguntas.lenght){
-                    this.reiniciar = true;
+                if( this.contador == this.preguntas.length){
+                    this.finalizado  = true;
+                    this.empezar    = false;
                 }else{
                     this.numero += 1;
+                    this.contador += 1;
+                    console.log(this.contador);
                     let id_pregunta = this.preguntas[this.numero].pre_id;
                     //REALIZA LA PETICION
+                    this.cargando = true;
                     axios.post(url,{opcion:'getRespuestas',id:id_pregunta}).then(response=>{
                         console.log(response.data);
                         this.respuestas = response.data;
+                        this.cargando = false;
                     })
     
-                    this.califico = false;
-                    this.correcto = false;
+                    this.califico   = false;
+                    this.correcto   = false;
                     this.incorrecto = false;
                 }
             }else{
-                alert("Es necesario calificar antes tu respuesta");
+                Swal.fire(
+                    'Hey!!',
+                    'Es necesario calificar antes tu respuesta',
+                    'info'
+                )
             }
         },
         calificar:function(){
@@ -150,11 +173,14 @@ new Vue({
               this.correcto = true;
               this.contCorrectas += 1;
             }else{
-                this.califico = true;
+                this.califico   = true;
                 this.incorrecto = true;
                 this.contIncorrectas += 1;
-                console.log("Respuesta incorrecta");
             }
+        },
+        reiniciar:function(){
+            this.finalizado  = false;
+            this.iniciar     = true;
         },
 
         //PROCEDIMIENTOS LISTAR

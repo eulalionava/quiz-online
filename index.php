@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <div class="card" v-if="!iniciar">
+        <div class="card" v-if="iniciar">
             <div class="card-header text-center text-muted">
                 <div class="jumbotron">
                     <input type="button" value="Iniciar Quiz Online" class="btn btn-success btn-lg" @click="iniciarQuiz">
@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <div class="card" v-if="reiniciar">
+        <div class="card" v-if="finalizado">
             <div class="card-header text-center text-muted">
                 <div class="jumbotron">
                     <h4>Quiz Online de Angular finalizado</h4>
@@ -60,7 +60,7 @@
                         <div class="col-md-3">
                             <div class="card">
                                 <div class="card-body">
-                                    <h1>{{puntos}}</h1>
+                                    <h1>{{total}}</h1>
                                 </div>
                                 <div class="card-footer bg-success">
                                     <h5 class="text-white">Puntos</h5>
@@ -73,13 +73,17 @@
             </div>
         </div>
 
-        <div class="row" v-if="iniciar">
+        <div class="row" v-if="empezar">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">¿ {{preguntas[numero].pre_pregunta}} ?</h4>
                     </div>
                     <div class="card-body" v-if="respuestas">
+
+                        <div class="fa-3x" v-if="cargando">
+                            <i class="fas fa-spinner fa-pulse"></i>
+                        </div>
                         <div class="custom-control custom-radio mb-2">
                             <input type="radio" name="pregunta" v-model="respuesta" v-bind:value="respuestas[0].res_correcta" class="custom-control-input" id="pregunta1">
                             <label for="pregunta1" class="custom-control-label">{{respuestas[0].res_respuesta}}</label>
@@ -98,10 +102,10 @@
                             <input type="button" name="" value="Calificar" class="btn btn-success form-control" @click="calificar">                                
                         </div>
                         <div class="col-md-auto correcto" v-if="correcto">
-                            <img src="img/correcto.png" width="30" height="30">                               
+                            <img src="img/correcto.png" width="30" height="50">                               
                         </div>
                         <div class="col-md-auto incorrecto" v-if="incorrecto">
-                            <img src="img/incorrecto.png" width="30" height="30">                                
+                            <img src="img/incorrecto.png" width="30" height="50">                                
                         </div>
                         <div class="col-md-3">
                             <input type="button" name="" value="Siguiente" class="btn btn-primary form-control" @click="siguiente">                                 
